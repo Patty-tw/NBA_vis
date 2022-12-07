@@ -1,0 +1,386 @@
+---
+title: "NBA_data"
+author: "Pei-Chi Hung"
+date: "2022-08-28"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(RSelenium)
+library(rvest)
+library(polite)
+library(tidyverse)
+library(netstat)
+library(data.table)
+```
+
+```{r shooting season 2021-2022}
+# start a selenium server and browser 
+driver <- rsDriver(browser = "chrome",
+                   chromever = "104.0.5112.79",
+                   verbose = FALSE, 
+                   port = free_port())
+
+# connect the server to the destination 
+remDr<-driver$client
+remDr$open()
+remDr$navigate('https://www.nba.com/stats/players/shooting/')
+
+# scrap data 
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df21_22 <- html_table(page) %>% .[[1]]
+
+```
+
+```{r r shooting season 2020-2021}
+# connect the server to the destination 
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2020-21&SeasonType=Playoffs')
+
+# scrap data 
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df20_21 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2019-2020}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2019-20&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df19_20 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2018-2019}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2018-19&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df18_19 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2017-2018}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2017-18&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df17_18 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2016-2017}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2016-17&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df16_17 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2015-2016}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2015-16&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df15_16 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2014-2015}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2014-15&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df14_15 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2013-2014}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2013-14&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df13_14 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2012-2013}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2012-13&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df12_13 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2011-2012}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2011-12&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df11_12 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2010-2011}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2010-11&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df10_11 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2009-2010}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2009-10&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df09_10 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2008-2009}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2008-09&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df08_09 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2007-2008}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2007-08&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df07_08<- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2006-2007}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2006-07&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df06_07 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2005-2006}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2005-06&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df05_06 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2004-2005}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2004-05&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df04_05 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2003-2004}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2003-04&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df03_04 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2002-2003}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2002-03&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df02_03 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2002-2001}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2001-02&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df01_02 <- html_table(page) %>% .[[1]]
+```
+
+```{r r shooting season 2000-2001}
+# connect the server to the destination
+remDr$navigate('https://www.nba.com/stats/players/shooting/?Season=2000-01&SeasonType=Playoffs')
+
+# scrap data
+remDr$findElement(using = "xpath", value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+
+table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+data_table_html <- table$getPageSource()
+page <- read_html(data_table_html %>% unlist())
+df00_01 <- html_table(page) %>% .[[1]]
+```
+
+```{r}
+# disconnect the selenium server and browser 
+system("taskkill /im java.exe /f")
+```
+
+```{r change column names}
+# combine all web scraped data 
+df_list <- list(df00_01,df01_02,df02_03,df03_04,df04_05,df05_06,df06_07,df07_08,
+            df08_09,df09_10,df10_11,df11_12,df12_13,df13_14,df14_15,df15_16,
+            df16_17,df17_18,df18_19,df19_20,df20_21,df21_22) 
+
+# rename columns 
+col_name <- paste(colnames(df00_01), 
+                  as.character(unlist(df00_01[3,]))) 
+
+for (i in seq_along(df_list)){
+  names (df_list[[i]]) <- col_name
+  df_list[[i]] <-  df_list[[i]][c(-1,-2,-3,-4,-5),]
+  df_list[[i]] <-  df_list[[i]][,c(-22,-23,-24)]
+}
+
+# double check the column name 
+df_list[[1]] %>% view() 
+```
+
+
+```{r create season}
+library(stringr)
+
+df_name <- c("df00_01","df01_02","df02_03","df03_04","df04_05","df05_06","df06_07","df07_08",
+            "df08_09","df09_10","df10_11","df11_12","df12_13","df13_14","df14_15","df15_16",
+            "df16_17","df17_18","df18_19","df19_20","df20_21","df21_22")
+
+for (i in seq_along(df_list)){
+  # create season for all data frame 
+  df_list[[i]]$Season <- paste0("20", substr(df_name[i], 3, 4), "-20", substr(df_name[i], 6, 7)) 
+  df_list[[i]] <- distinct(df_list[[i]], ` Player`, .keep_all = TRUE)
+ }
+
+shooting <- rbindlist(df_list)
+write.csv(shooting,"C:\\NBA\\shooting.csv", row.names = TRUE)
+```
+
+
+
+
+
+
+
+
+
