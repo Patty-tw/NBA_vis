@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[48]:
-
-
 # use the nba_api to scrape the data 
 # goal: collect data contains positions where each shot was made during a game 
 from nba_api.stats.endpoints import shotchartdetail
@@ -41,6 +35,3 @@ for i in all_team_id:
 #
     df.to_csv('shot_chart'+ str(i)+'_1.csv', index=False)
     
-
-
-
