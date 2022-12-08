@@ -17,9 +17,12 @@ library(dplyr)
 ```
 
 ```{r}
+# read in all files in the folder 
 new_sc <- list.files(path=".", pattern=".csv", all.files=FALSE,
     full.names=FALSE)
 df = do.call(rbind, lapply(new_sc, function(x) read.csv(x, stringsAsFactors = FALSE)))
+
+# rename season 
 df <- df %>% 
   mutate(Season = substr(GAME_DATE, 1, 4))
 df$Season[df$Season == 2001] <- 2000
