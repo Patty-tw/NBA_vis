@@ -34,6 +34,7 @@ for i in all_team_id:
     df.columns = headers
 
 # write to csv file
+# manually change file names for different seasons 
 # without underscore refers to season 2020-2021 
 # _1 refers to season 2000-01  
 # _2 refers to season 2010-11 
