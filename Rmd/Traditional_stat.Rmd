@@ -1,0 +1,90 @@
+---
+title: "Traditional_data"
+author: "Pei-Chi Hung"
+date: "2022-08-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(RSelenium)
+library(rvest)
+library(polite)
+library(tidyverse)
+library(netstat)
+library(data.table)
+```
+
+```{r}
+# start a selenium server and browser 
+driver <- rsDriver(browser = "chrome",
+                   chromever = "104.0.5112.79",
+                   verbose = FALSE, 
+                   port = free_port())
+
+# connect the server to the destination 
+remDr<-driver$client
+remDr$open()
+remDr$navigate('https://www.nba.com/stats/players/traditional/?sort=PTS&dir=-1')
+object_num <- "//*/option[@value = 'object:7']"
+current_object <- 7
+cond <- TRUE
+all_trad_stat <- list()
+
+# create a list that store  a list of dataframe names for later use
+df_name_rev <- c("df00_01","df01_02","df02_03","df03_04","df04_05","df05_06","df06_07","df07_08",
+            "df08_09","df09_10","df10_11","df11_12","df12_13","df13_14","df14_15","df15_16",
+            "df16_17","df17_18","df18_19","df19_20","df20_21","df21_22") %>% rev()
+```
+
+```{r}
+# loop through all the pages
+# web scrape data 
+i = 1
+while (cond == TRUE) {
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = "//select[@name='Season']")$clickElement()
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = object_num)$clickElement()
+  Sys.sleep(3.5)
+  remDr$findElement(using = "xpath", 
+                    value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+  table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+
+  data_table_html <- table$getPageSource()
+  page <- read_html(data_table_html %>% unlist())
+  df <- html_table(page) %>% .[[1]]
+  
+  # rename season 
+  df$Season <- paste0("20", substr(df_name_rev[i], 3, 4), "-20", substr(df_name_rev[i], 6, 7)) 
+  all_trad_stat <- rbindlist(list(all_trad_stat, df))
+  object_num <- str_replace(object_num, as.character(current_object), as.character(current_object+1))
+  i <- i + 1 
+  
+  # give a break between the pages 
+  # in order for the loop to run smoothly 
+  Sys.sleep(0.2)
+  
+  if (current_object == 28){
+    cond = FALSE
+  }else{
+    current_object <- current_object + 1
+  }
+  
+  if (cond == FALSE){
+    break
+  }
+}
+
+# save the scraped data as csv 
+write.csv(all_trad_stat,"C:\\NBA\\trad_stats.csv", row.names = TRUE)
+
+# disconnect the selenium server and browser 
+system("taskkill /im java.exe /f")
+```
+
