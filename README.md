@@ -1,4 +1,4 @@
-# NBA_vis-
+# NBA_vis
 
 # Rmd files 
 - Shooting_data.Rmd: scraped shooting data from [NBA website](https://www.nba.com/stats/players/shooting)
