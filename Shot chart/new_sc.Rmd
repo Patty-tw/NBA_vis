@@ -1,0 +1,30 @@
+---
+title: "new_sc"
+author: "Pei-Chi Hung"
+date: "2022-09-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(RSelenium)
+library(rvest)
+library(XML)
+library(tidyverse)
+library(tidyr)
+library(nbastatR)
+library(dplyr)
+```
+
+```{r}
+new_sc <- list.files(path=".", pattern=".csv", all.files=FALSE,
+    full.names=FALSE)
+df = do.call(rbind, lapply(new_sc, function(x) read.csv(x, stringsAsFactors = FALSE)))
+df <- df %>% 
+  mutate(Season = substr(GAME_DATE, 1, 4))
+df$Season[df$Season == 2001] <- 2000
+df$Season[df$Season == 2011] <- 2010
+df$Season[df$Season == 2021] <- 2020
+write.csv(df,"C:\\NBA\\new_all_sc.csv", row.names = TRUE)
+```
+
