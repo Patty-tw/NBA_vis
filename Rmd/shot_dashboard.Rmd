@@ -1,0 +1,204 @@
+---
+title: "Shot_dash"
+author: "Pei-Chi Hung"
+date: "2022-08-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(RSelenium)
+library(rvest)
+library(polite)
+library(tidyverse)
+library(netstat)
+library(data.table)
+```
+
+```{r shooting season 2021-2022}
+# start a selenium server and browser
+driver <- rsDriver(browser = "chrome",
+                   chromever = "104.0.5112.79",
+                   verbose = FALSE, 
+                   port = free_port())
+
+# connect the server to the destination
+remDr<-driver$client
+remDr$open()
+remDr$navigate('https://www.nba.com/stats/players/shots-general/')
+object_num <- "//*/option[@value = 'object:7']"
+current_object <- 7
+cond <- TRUE
+shooting_dash_forward <- list()
+
+# create a list that store  a list of dataframe names for later use
+df_name_rev <- c("df13_14","df14_15","df15_16","df16_17","df17_18","df18_19","df19_20","df20_21","df21_22") %>% rev()
+
+```
+
+```{r}
+# loop through all the pages
+# pages that contains position = forward 
+i = 1
+while (cond == TRUE) {
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = "//select[@name='Season']")$clickElement()
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = object_num)$clickElement()
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = "//button[@class='stats-filters-advanced__toggle']")$clickElement() 
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = "//select[@name='PlayerPosition']")$clickElement()
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = "//*/option[@label = 'Forward']")$clickElement()
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = "//button[@class='run-it']")$clickElement()
+  Sys.sleep(4)
+  remDr$findElement(using = "xpath", 
+                    value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+  table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+
+  data_table_html <- table$getPageSource()
+  page <- read_html(data_table_html %>% unlist())
+  df <- html_table(page) %>% .[[1]]
+  label <- remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+  df$Season <- paste0("20", substr(df_name_rev[i], 3, 4), "-20", substr(df_name_rev[i], 6, 7)) 
+  shooting_dash_forward <- rbindlist(list(shooting_dash_forward, df))
+  object_num <- str_replace(object_num, as.character(current_object), as.character(current_object+1))
+  i <- i + 1 
+  
+  
+  Sys.sleep(0.2)
+  
+  if (current_object == 15){
+    cond = FALSE
+  }else{
+    current_object <- current_object + 1
+  }
+  
+  if (cond == FALSE){
+    break
+  }
+}
+write.csv(shooting_dash_forward,"C:\\NBA\\shoot_dash_forward.csv", row.names = TRUE)
+
+```
+
+```{r}
+shooting_dash_center <- list()
+current_object <- 7
+cond <- TRUE
+remDr$navigate('https://www.nba.com/stats/players/shots-general/')
+object_num <- "//*/option[@value = 'object:7']"
+
+remDr$findElement(using = "xpath", value = "//button[@class='stats-filters-advanced__toggle']")$clickElement()
+remDr$findElement(using = "xpath", value = "//select[@name='PlayerPosition']")$clickElement()
+Sys.sleep(0.5)
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'Center']")$clickElement()
+Sys.sleep(0.5)
+remDr$findElement(using = "xpath", value = "//button[@class='run-it']")$clickElement()
+
+# loop through all the pages
+# pages that contains position = center 
+i = 1
+while (cond == TRUE) {
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = "//select[@name='Season']")$clickElement()
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = object_num)$clickElement()
+
+  Sys.sleep(4)
+
+  table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table']")
+
+  data_table_html <- table$getPageSource()
+  page <- read_html(data_table_html %>% unlist())
+  df <- html_table(page) %>% .[[1]]
+  df$Season <- paste0("20", substr(df_name_rev[i], 3, 4), "-20", substr(df_name_rev[i], 6, 7)) 
+  shooting_dash_center <- rbindlist(list(shooting_dash_center, df))
+  object_num <- str_replace(object_num, as.character(current_object), as.character(current_object+1))
+  i <- i + 1 
+  
+  
+  Sys.sleep(0.2)
+  
+  if (current_object == 15){
+    cond = FALSE
+  }else{
+    current_object <- current_object + 1
+  }
+  
+  if (cond == FALSE){
+    break
+  }
+}
+
+write.csv(shooting_dash_center,"C:\\NBA\\shoot_dash_center.csv", row.names = TRUE)
+
+```
+
+```{r}
+shooting_dash_guard <- list()
+current_object <- 7
+cond <- TRUE
+remDr$navigate('https://www.nba.com/stats/players/shots-general/')
+object_num <- "//*/option[@value = 'object:7']"
+
+remDr$findElement(using = "xpath", value = "//button[@class='stats-filters-advanced__toggle']")$clickElement()
+Sys.sleep(0.5)
+remDr$findElement(using = "xpath", value = "//select[@name='PlayerPosition']")$clickElement()
+Sys.sleep(0.5)
+remDr$findElement(using = "xpath", value = "//*/option[@label = 'Guard']")$clickElement()
+remDr$findElement(using = "xpath", value = "//button[@class='run-it']")$clickElement()
+
+# loop through all the pages
+# pages that contains position = guard 
+i = 1
+while (cond == TRUE) {
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = "//select[@name='Season']")$clickElement()
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = object_num)$clickElement()
+
+  Sys.sleep(4)
+  remDr$findElement(using = "xpath", 
+                    value = "//select[@class='stats-table-pagination__select ng-pristine ng-untouched ng-valid ng-not-empty']")$clickElement()
+  Sys.sleep(0.5)
+  remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+  table <- remDr$findElement(using = "xpath", value = "//div[@class = 'nba-stat-table__overflow']")
+
+  data_table_html <- table$getPageSource()
+  page <- read_html(data_table_html %>% unlist())
+  df <- html_table(page) %>% .[[1]]
+  label <- remDr$findElement(using = "xpath", value = "//*/option[@label = 'All']")$clickElement()
+  df$Season <- paste0("20", substr(df_name_rev[i], 3, 4), "-20", substr(df_name_rev[i], 6, 7)) 
+  shooting_dash_guard <- rbindlist(list(shooting_dash_guard, df))
+  object_num <- str_replace(object_num, as.character(current_object), as.character(current_object+1))
+  i <- i + 1 
+  
+  
+  Sys.sleep(0.2)
+  
+  if (current_object == 15){
+    cond = FALSE
+  }else{
+    current_object <- current_object + 1
+  }
+  
+  if (cond == FALSE){
+    break
+  }
+}
+
+write.csv(shooting_dash_guard,"C:\\NBA\\shoot_dash_guard.csv", row.names = TRUE)
+
+# disconnect the selenium server and browser 
+system("taskkill /im java.exe /f")
+```
+
