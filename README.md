@@ -6,5 +6,8 @@
 - shot_dashboard.Rmd: scraped data from the shot dashboard for different positions, refers to [NBA](https://www.nba.com/stats/players/shots-general) for more information
 - tidying.Rmd: tidy and transform the structure of scraped data 
 
-# python files 
+# Python files and shot chart 
 - NBA.py: scraped shot position data from [NBA](www.nba.com) using the [nba_api](https://github.com/swar/nba_api) from Swar Patel
+- new_sc.rmd: combine all scraped data in the folder
+
+# Data
