@@ -1,4 +1,5 @@
 # NBA_vis
+Visualisations discussing whether the NBA has entered the three-point era with the use of Tableau, R and Python 
 
 # Rmd files 
 - Shooting_data.Rmd: scraped shooting data from [NBA website](https://www.nba.com/stats/players/shooting)
